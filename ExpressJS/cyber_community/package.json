@@ -9,12 +9,20 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "nodemon --import=extensionless/register server.js",
-    "start": "node --import=extensionless/register server.js"
+    "start": "node --import=extensionless/register server.js",
+    "prisma": "npx prisma db pull && npx prisma generate"
   },
   "dependencies": {
+    "@prisma/client": "^6.13.0",
+    "dotenv": "^17.2.1",
     "express": "^5.1.0",
     "extensionless": "^1.9.9",
     "mysql2": "^3.14.2",
-    "nodemon": "^3.1.10"
+    "nodemon": "^3.1.10",
+    "sequelize": "^6.37.7",
+    "sequelize-auto": "^0.8.8"
+  },
+  "devDependencies": {
+    "prisma": "^6.13.0"
   }
 }

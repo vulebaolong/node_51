@@ -1,8 +1,9 @@
 import mysql from 'mysql2/promise';
+import { DATABASE_URL } from '../constant/app.constant';
 
 // Create the connection pool. The pool-specific settings are the defaults
 const pool = mysql.createPool({
-   uri: "mysql://root:1234@localhost:3307/db_cyber_community", // csdl://user:password@diachidatabsse
+   uri: DATABASE_URL, // csdl://user:password@diachidatabsse
 
    waitForConnections: true,
    connectionLimit: 10,
