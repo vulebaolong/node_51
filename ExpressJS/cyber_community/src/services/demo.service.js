@@ -1,3 +1,4 @@
+import { BadRequestException } from "../common/helpers/exception.helper";
 import pool from "../common/mysql2/init.myslq2";
 import prisma from "../common/prisma/init.prisma";
 import sequelize from "../common/sequelize/init.sequelize";
@@ -10,6 +11,17 @@ const demoService = {
     },
     query: async (req) => {
         const query = req.query;
+
+        // Lỗi không kiểm soát được
+        // const userName = "vulebaolong";
+        // userName = "longbaolevu";
+
+        // Lỗi kiểm soát được
+        const passDB = `123`
+        const passUser = `111`
+        if(passDB !== passUser) {
+            throw new BadRequestException(`Lỗi pass`)
+        }
 
         // MYSQL2
         const [dataMysql2, fields] = await pool.query("SELECT * FROM `Roles`");
@@ -25,7 +37,6 @@ const demoService = {
         const dataPrisma = await prisma.roles.findMany();
 
         return {
-            message: "Xử lý dữ liệu ở Query",
             mysql2: dataMysql2,
             sequelize: dataSequelize,
             prisma: dataPrisma,
