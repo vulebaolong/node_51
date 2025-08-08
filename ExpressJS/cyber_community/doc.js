@@ -1,7 +1,7 @@
 /**
  * extensionless: để giúp import không cần thêm đuôi js
  * nodemon: để load lại server khi có code thay đổi
- * 
+ *
  * Tương tác DB
  * mysql2: để tương tác với db (không phải là ORM) là thư viện đã có từ rất lâu
  * sequelize: ORM tương tác với db
@@ -10,6 +10,10 @@
  *       - npx prisma init: khởi tạo 1 lần
  *       - npx prisma db pull : kéo db vào code (sẽ chạy khi cần cập nhật)
  *       - npx prisma generate: tạo ra object để chấm lấy table (sẽ chạy khi cần cập nhật)
- * 
+ *
  * dotenv: nạp biến từ file .env vào process.env
+ *
+ * cors: cho phép FE nào? sử dụng (API) lấy dữ liệu
+ *
+ * bcrypt: mã hoá password (bắt buộc)
  */
