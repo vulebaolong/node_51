@@ -40,7 +40,19 @@ export const authController = {
 
     login: async function (req, res, next) {
         const result = await authService.login(req);
-        const response = responseSuccess(result, `Login successfully`);
+        const response = responseSuccess(result, `Login Successfully`);
+        res.status(response.statusCode).json(response);
+    },
+
+    getInfo: async function (req, res, next) {
+        const result = await authService.getInfo(req);
+        const response = responseSuccess(result, `Get Info Successfully`);
+        res.status(response.statusCode).json(response);
+    },
+
+    refreshToken: async function (req, res, next) {
+        const result = await authService.refreshToken(req);
+        const response = responseSuccess(result, `Refresh Token Successfully`);
         res.status(response.statusCode).json(response);
     },
 };

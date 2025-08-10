@@ -1,6 +1,7 @@
-import { BadRequestException } from "../common/helpers/exception.helper";
+import { BadRequestException, UnauthorizedException } from "../common/helpers/exception.helper";
 import prisma from "../common/prisma/init.prisma";
 import bcrypt from "bcrypt";
+import { tokenService } from "./token.service";
 
 export const authService = {
     create: async function (req) {
@@ -51,6 +52,51 @@ export const authService = {
     },
 
     login: async function (req) {
-        return `This action removes a id: ${req.params.id} auth`;
+        const { email, password } = req.body;
+
+        const userExits = await prisma.users.findUnique({
+            where: {
+                email: email,
+            },
+        });
+        if (!userExits) throw new BadRequestException("Người dùng chưa tồn tại, vui lòng đăng ký");
+        // Nếu code chạy được tới đây => đảm bảo có userExits
+
+        const isPassword = bcrypt.compareSync(password, userExits.password); // true
+        if (!isPassword) throw new BadRequestException("Mật khẩu không chính xác");
+        // Nếu code chạy được tới đây => người dùng này hợp lệ
+
+        const tokens = tokenService.createTokens(userExits.id);
+
+        console.log({ email, password });
+
+        return tokens;
+    },
+
+    getInfo: (req) => {
+        delete req.user.password;
+        return req.user;
+    },
+
+    refreshToken: async (req) => {
+        const { accessToken, refreshToken } = req.body;
+
+        // verify accessToken (trường hợp hết hạn): bỏ kiểm tra hết hạn
+        const decodeAccessToken = tokenService.verifyAccesToken(accessToken, { ignoreExpiration: true });
+        const decodeRefreshToken = tokenService.verifyRefreshToken(refreshToken);
+
+        if (decodeAccessToken.userId !== decodeRefreshToken.userId) throw new UnauthorizedException("Token Invalid");
+
+        const user = await prisma.users.findUnique({
+            where: {
+                id: decodeRefreshToken.userId,
+            },
+        });
+        if (!user) throw new UnauthorizedException("User Invalid");
+
+        const tokens = tokenService.createTokens(user.id);
+
+        console.log({ accessToken, refreshToken, decodeAccessToken, decodeRefreshToken });
+        return tokens;
     },
 };

@@ -16,4 +16,6 @@
  * cors: cho phép FE nào? sử dụng (API) lấy dữ liệu
  *
  * bcrypt: mã hoá password (bắt buộc)
+ *
+ * jsonwebtoken: tạo token
  */
