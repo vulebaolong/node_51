@@ -3,6 +3,7 @@ import rootRouter from "./src/routers/root.router";
 import { responseError } from "./src/common/helpers/response.helper";
 import { appError } from "./src/common/app-error/app-error.error";
 import cors from "cors";
+import { initGoogleAuth20 } from "./src/common/passport/google-auth20.passport";
 
 const app = express();
 
@@ -14,7 +15,10 @@ app.use(
     })
 );
 
+initGoogleAuth20()
+
 app.use("/api", rootRouter);
+
 app.use(appError);
 
 const port = 3069;

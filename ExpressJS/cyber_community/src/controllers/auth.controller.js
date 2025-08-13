@@ -55,4 +55,9 @@ export const authController = {
         const response = responseSuccess(result, `Refresh Token Successfully`);
         res.status(response.statusCode).json(response);
     },
+
+    googleAuth20: function (req, res, next) {
+        const result = authService.googleAuth20(req);
+        res.redirect(result);
+    },
 };

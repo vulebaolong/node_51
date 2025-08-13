@@ -18,4 +18,7 @@
  * bcrypt: mã hoá password (bắt buộc)
  *
  * jsonwebtoken: tạo token
+ * 
+ * passport: thư viện cha sẽ luôn cần cài nếu như muốn sử dụng chiến lược
+ * passport-google-oauth20: chiến lược (logic) cho flow đăng nhập bằng goole
  */

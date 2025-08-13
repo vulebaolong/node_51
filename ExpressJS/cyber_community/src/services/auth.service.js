@@ -99,4 +99,10 @@ export const authService = {
         console.log({ accessToken, refreshToken, decodeAccessToken, decodeRefreshToken });
         return tokens;
     },
+
+    googleAuth20: (req) => {
+        const { accessToken, refreshToken } = req.user;
+        const urlRedirect = `http://localhost:3000/login-callback?accessToken=${accessToken}&refreshToken=${refreshToken}`;
+        return urlRedirect
+    },
 };
