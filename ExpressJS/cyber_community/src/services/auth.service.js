@@ -2,6 +2,7 @@ import { BadRequestException, UnauthorizedException } from "../common/helpers/ex
 import prisma from "../common/prisma/init.prisma";
 import bcrypt from "bcrypt";
 import { tokenService } from "./token.service";
+import { sendMail } from "../common/nodemailer/init.nodemailer";
 
 export const authService = {
     create: async function (req) {
@@ -62,6 +63,14 @@ export const authService = {
         if (!userExits) throw new BadRequestException("Người dùng chưa tồn tại, vui lòng đăng ký");
         // Nếu code chạy được tới đây => đảm bảo có userExits
 
+        // do tài khoản đăng nhập bằng gmail hoặc facebook
+        // lúc này tài khoản sẽ không có mật khẩu
+        // nên nếu người dùng cố tình đăng nhập bằng email thì sẽ không có mật khẩu để kiểm tra
+        // nên phải bắt người dùng đăng nhập bằng email vào setting để cập nhật lại mật khẩu mới
+        if (!userExits.password) {
+            throw new BadRequestException("Vui lòng đăng nhập bằng mạng xã hội (gmail, facebook), để cập nhật lại mật khẩu mới trong setting");
+        }
+
         const isPassword = bcrypt.compareSync(password, userExits.password); // true
         if (!isPassword) throw new BadRequestException("Mật khẩu không chính xác");
         // Nếu code chạy được tới đây => người dùng này hợp lệ
@@ -69,6 +78,9 @@ export const authService = {
         const tokens = tokenService.createTokens(userExits.id);
 
         console.log({ email, password });
+
+        // sendMail(email)
+        sendMail("vulebaolong@gmail.com");
 
         return tokens;
     },
@@ -103,6 +115,6 @@ export const authService = {
     googleAuth20: (req) => {
         const { accessToken, refreshToken } = req.user;
         const urlRedirect = `http://localhost:3000/login-callback?accessToken=${accessToken}&refreshToken=${refreshToken}`;
-        return urlRedirect
+        return urlRedirect;
     },
 };

@@ -2,6 +2,7 @@ import express from "express";
 import { authController } from "../controllers/auth.controller";
 import { protect } from "../common/middlewares/protect.middleware";
 import passport from "passport";
+import { checkPermission } from "../common/middlewares/check-permission.middleware";
 
 const authRouter = express.Router();
 
@@ -11,8 +12,8 @@ authRouter.get("/", authController.findAll);
 
 authRouter.post("/register", authController.register);
 authRouter.post("/login", authController.login);
-authRouter.get("/get-info", protect, authController.getInfo);
-authRouter.post("/refresh-token", authController.refreshToken);
+authRouter.get("/get-info", protect, checkPermission, authController.getInfo);
+authRouter.post("/refresh-token",  authController.refreshToken);
 
 // FE sẽ gọi từ cái thanh điền url của trình duyệt để kích hoạt gọi api GET tới: http://localhost:3069/api/auth/goole
 // BE sẽ nhận tín hiệu api này và passport sẽ phản hổi res.ridirect() về lại FE để chuyển FE sang trang đăng nhập của google

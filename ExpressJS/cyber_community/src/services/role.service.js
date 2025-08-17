@@ -1,6 +1,7 @@
+import { BadRequestException } from "../common/helpers/exception.helper";
 import prisma from "../common/prisma/init.prisma";
 
-export const articleService = {
+export const roleService = {
     create: async function (req) {
         return `This action create`;
     },
@@ -8,10 +9,11 @@ export const articleService = {
     findAll: async function (req) {
         let { page, pageSize, filters } = req.query;
         page = +page > 0 ? +page : 1;
-        pageSize = +pageSize > 0 ? +pageSize : 1;
-        filters = JSON.parse(filters) || {};
+        pageSize = +pageSize > 0 ? +pageSize : 10;
+        filters = JSON.parse(filters || "{}") || {};
 
         // index (OFFSET) = ( page - 1 ) * pageSize
+        console.log({ page, pageSize });
         const index = (page - 1) * pageSize;
 
         console.log(`filter lúc đầu`, filters);
@@ -35,7 +37,7 @@ export const articleService = {
 
         console.log({ page, pageSize, index, filters });
 
-        const articlesPromise = prisma.articles.findMany({
+        const rolesPromise = prisma.roles.findMany({
             // SQL: OFFSET
             skip: index,
 
@@ -50,9 +52,9 @@ export const articleService = {
         });
 
         // đếm số lượng row hàng trong table
-        const totalItemPromise = prisma.articles.count();
+        const totalItemPromise = prisma.roles.count();
 
-        const [articles, totalItem] = await Promise.all([articlesPromise, totalItemPromise]);
+        const [roles, totalItem] = await Promise.all([rolesPromise, totalItemPromise]);
 
         const totalPage = Math.ceil(totalItem / pageSize);
 
@@ -61,12 +63,43 @@ export const articleService = {
             pageSize,
             totalItem: totalItem,
             totalPage: totalPage,
-            items: articles || [],
+            items: roles || [],
         };
     },
 
     findOne: async function (req) {
-        return `This action returns a id: ${req.params.id} article`;
+        const role = await prisma.roles.findUnique({
+            where: {
+                id: +req.params.id,
+            },
+        });
+        return role;
+    },
+
+    async toggleIsActive(req) {
+        const user = req.user;
+        const roleId = +req.params.roleId;
+        console.log({ user, roleId });
+
+        const roleExist = await prisma.roles.findUnique({
+            where: {
+                id: roleId,
+            },
+        });
+        if (!roleExist) {
+            throw new BadRequestException("Role not found");
+        }
+
+        await prisma.roles.update({
+            where: {
+                id: roleExist.id
+            },
+            data: {
+                isActive: !roleExist.isActive,
+            },
+        });
+
+        return true;
     },
 
     update: async function (req) {
