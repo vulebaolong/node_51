@@ -18,9 +18,14 @@
  * bcrypt: mã hoá password (bắt buộc)
  *
  * jsonwebtoken: tạo token
- * 
+ *
  * passport: thư viện cha sẽ luôn cần cài nếu như muốn sử dụng chiến lược
  * passport-google-oauth20: chiến lược (logic) cho flow đăng nhập bằng goole
- * 
+ *
  * nodemailer: hỗ trợ gửi email
+ *
+ * jest: thư viện giúp viết unit test
+ * @types/jest: giúp có thêm type gợi ý khi sử dụng thư viện jest
+ * 
+ * swagger-ui-express: giúp tạo ra swagger
  */

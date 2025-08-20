@@ -48,8 +48,11 @@ export const authService = {
             },
         });
 
-        console.log({ email, password, fullName, userExits, userNew });
-        return true;
+        console.log({ userNew });
+
+        delete userNew.password;
+
+        return userNew;
     },
 
     login: async function (req) {

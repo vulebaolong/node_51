@@ -9,7 +9,8 @@ export const articleService = {
         let { page, pageSize, filters } = req.query;
         page = +page > 0 ? +page : 1;
         pageSize = +pageSize > 0 ? +pageSize : 1;
-        filters = JSON.parse(filters) || {};
+        // filters = JSON.parse(filters) || {};
+        filters = JSON.parse(filters || "{}") || {};
 
         // index (OFFSET) = ( page - 1 ) * pageSize
         const index = (page - 1) * pageSize;
