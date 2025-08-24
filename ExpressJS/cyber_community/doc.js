@@ -28,4 +28,6 @@
  * @types/jest: giúp có thêm type gợi ý khi sử dụng thư viện jest
  * 
  * swagger-ui-express: giúp tạo ra swagger
+ * 
+ * socket.io hỗ trợ real-time, xây dựng chức năng chat
  */

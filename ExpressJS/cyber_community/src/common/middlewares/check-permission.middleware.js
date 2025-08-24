@@ -9,7 +9,7 @@ export const checkPermission = async (req, res, next) => {
         throw new BadRequestException("User Not Found");
     }
 
-    console.log({user});
+    // console.log({user});
 
     // role admin thì cho qua
     if (user.roleId === 1) {
@@ -47,7 +47,7 @@ export const checkPermission = async (req, res, next) => {
         throw new BadRequestException("User not permission");
     }
 
-    console.log({ user, method, endpoint, rolePermissionExist });
+    // console.log({ user, method, endpoint, rolePermissionExist });
 
     next();
 };

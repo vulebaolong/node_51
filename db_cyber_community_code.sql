@@ -219,6 +219,7 @@ CREATE TABLE `Chats` (
 CREATE TABLE IF NOT EXISTS `ChatGroups` (
 	`id` INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
 	-- 
+	`keyForChatOne` VARCHAR(255) UNIQUE,
 	`name` VARCHAR(255),
 	`ownerId` INT,
 	FOREIGN KEY (`ownerId`) REFERENCES `Users` (`id`),

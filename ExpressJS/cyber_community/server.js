@@ -1,9 +1,10 @@
-import express from "express";
-import rootRouter from "./src/routers/root.router";
-import { responseError } from "./src/common/helpers/response.helper";
-import { appError } from "./src/common/app-error/app-error.error";
 import cors from "cors";
+import express from "express";
+import { createServer } from "http";
+import { appError } from "./src/common/app-error/app-error.error";
 import { initGoogleAuth20 } from "./src/common/passport/google-auth20.passport";
+import { initSocket } from "./src/common/socket/init.socket";
+import rootRouter from "./src/routers/root.router";
 
 const app = express();
 
@@ -15,14 +16,16 @@ app.use(
     })
 );
 
-initGoogleAuth20()
+initGoogleAuth20();
 
 app.use("/api", rootRouter);
 
 app.use(appError);
 
+const httpServer = createServer(app);
+initSocket(httpServer);
 const port = 3069;
-app.listen(port, () => {
+httpServer.listen(port, () => {
     console.log(`Server is running on http://localhost:${port}`);
 });
 
