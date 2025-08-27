@@ -1,6 +1,45 @@
+import { BadRequestException } from "../common/helpers/exception.helper";
 import prisma from "../common/prisma/init.prisma";
+import fs from "fs";
+import path from "path";
 
 export const userService = {
+    avatarLocal: async function (req) {
+        // req.file is the `avatar` file
+        // req.body will hold the text fields, if there were any
+        console.log(req.file);
+        if (!req.file) {
+            throw new BadRequestException("Not found file");
+        }
+
+        const user = req.user;
+
+        await prisma.users.update({
+            where: {
+                id: user.id,
+            },
+            data: {
+                avatar: req.file.filename,
+            },
+        });
+
+        if (user.avatar) {
+            // win: \\
+            // mac: //
+            const oldFilePath = path.join("public/images", user.avatar);
+            if (fs.existsSync(oldFilePath)) {
+                fs.unlinkSync(oldFilePath);
+            }
+        }
+
+        return true;
+    },
+
+    avatarCloud: async function (req) {
+        console.log(req.file);
+        return `avatarCloud`;
+    },
+
     create: async function (req) {
         return `This action create`;
     },

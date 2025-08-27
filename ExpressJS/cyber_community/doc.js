@@ -30,4 +30,9 @@
  * swagger-ui-express: giúp tạo ra swagger
  * 
  * socket.io hỗ trợ real-time, xây dựng chức năng chat
+ * 
+ * graphql-http, graphql: xây dựng hệ thống API bằng graphql
+ * ruru: giúp gọi GraphQL bằng giao diện riêng
+ * 
+ * multer: thư viện giúp upload hình ảnh
  */
