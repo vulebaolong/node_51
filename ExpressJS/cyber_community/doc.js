@@ -35,4 +35,6 @@
  * ruru: giúp gọi GraphQL bằng giao diện riêng
  * 
  * multer: thư viện giúp upload hình ảnh
+ * 
+ * cloudinary: thư viện bên thứ ba giúp upload hình ảnh lên đám mây
  */

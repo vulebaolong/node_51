@@ -1,3 +1,4 @@
+import cloudinary from "../common/cloudinary/init.cloudinary";
 import { BadRequestException } from "../common/helpers/exception.helper";
 import prisma from "../common/prisma/init.prisma";
 import fs from "fs";
@@ -23,6 +24,7 @@ export const userService = {
             },
         });
 
+        // xoá hình cũ nếu có, đảm bảo avatar chỉ có 1
         if (user.avatar) {
             // win: \\
             // mac: //
@@ -30,6 +32,9 @@ export const userService = {
             if (fs.existsSync(oldFilePath)) {
                 fs.unlinkSync(oldFilePath);
             }
+
+            // xoá cloud
+            cloudinary.uploader.destroy(user.avatar)
         }
 
         return true;
@@ -37,7 +42,52 @@ export const userService = {
 
     avatarCloud: async function (req) {
         console.log(req.file);
-        return `avatarCloud`;
+        if (!req.file) {
+            throw new BadRequestException("Not found file");
+        }
+
+        const user = req.user;
+
+        // đưa hình lên cloud
+        const byteArrayBuffer = req.file.buffer;
+        const uploadResult = await new Promise((resolve, reject) => {
+            cloudinary.uploader
+                .upload_stream({ folder: "images" }, (error, uploadResult) => {
+                    if (error) {
+                        return reject(error);
+                    }
+                    return resolve(uploadResult);
+                })
+                .end(byteArrayBuffer);
+        });
+
+        await prisma.users.update({
+            where: {
+                id: user.id,
+            },
+            data: {
+                avatar: uploadResult.public_id,
+            },
+        });
+
+         if (user.avatar) {
+            // xoá local
+            // win: \\
+            // mac: //
+            const oldFilePath = path.join("public/images", user.avatar);
+            if (fs.existsSync(oldFilePath)) {
+                fs.unlinkSync(oldFilePath);
+            }
+
+            // xoá cloud
+            cloudinary.uploader.destroy(user.avatar)
+        }
+        // di chuyển folder
+        // cloudinary.uploader.rename("images-draft/kakakakakaka", "image-article/kakakakakaka")
+
+        console.log({ uploadResult });
+
+        return true;
     },
 
     create: async function (req) {
