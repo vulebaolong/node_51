@@ -10,6 +10,9 @@ import {
 } from '@nestjs/common';
 import { ArticleService } from './article.service';
 import { QueryArticleDto } from './dto/query-article.dto';
+import { Public } from 'src/common/decorators/public.decorator';
+import { User } from 'src/common/decorators/user.decorator';
+import type { Users } from 'generated/prisma';
 
 @Controller('article')
 export class ArticleController {
@@ -27,8 +30,11 @@ export class ArticleController {
     body,
     @Req()
     req,
+    @User()
+    user: Users,
   ) {
     // console.log({ query, param, headers, body });
+    console.log({ user: user });
     return await this.articleService.findAll(query);
   }
 }

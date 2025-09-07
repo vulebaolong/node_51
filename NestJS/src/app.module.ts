@@ -5,10 +5,11 @@ import { ArticleModule } from './modules/modules-api/article/article.module';
 import { PrismaModule } from './modules/modules-system/prisma/prisma.module';
 import { AuthModule } from './modules/modules-api/auth/auth.module';
 import { TokenModule } from './modules/modules-system/token/token.module';
+import { ProtectStrategy2 } from './common/guard/protect/protect2.strategy';
 
 @Module({
   imports: [ArticleModule, PrismaModule, AuthModule, TokenModule],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, ProtectStrategy2],
 })
 export class AppModule {}
