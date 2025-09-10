@@ -6,6 +6,8 @@ import { PrismaService } from 'src/modules/modules-system/prisma/prisma.service'
 // import bcrypt from 'bcrypt';
 import * as bcrypt from 'bcrypt';
 import { TokenService } from 'src/modules/modules-system/token/token.service';
+import { Users } from 'generated/prisma';
+import { RegisterDto } from './dto/register.dto';
 
 @Injectable()
 export class AuthService {
@@ -52,6 +54,40 @@ export class AuthService {
     // sendMail('vulebaolong@gmail.com');
 
     return tokens;
+  }
+
+  async register(registerDto: RegisterDto) {
+    const { email, password, fullName } = registerDto;
+
+    const userExits = await this.prisma.users.findUnique({
+      where: {
+        email: email,
+      },
+    });
+
+    if (userExits) {
+      throw new BadRequestException('Ông có tài khoản đăng ký chi nữa');
+    }
+
+    const passwordHash = bcrypt.hashSync(password, 10);
+
+    const { password: _, ...userNew } = await this.prisma.users.create({
+      data: {
+        email: email,
+        password: passwordHash,
+        fullName: fullName,
+      },
+    });
+
+    console.log({ userNew });
+
+    // delete userNew.password;
+
+    return userNew;
+  }
+
+  getInfo(user: Users) {
+    return { ...user, isTotp: !!user.totpSecret };
   }
 
   create(createAuthDto: CreateAuthDto) {

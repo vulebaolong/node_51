@@ -13,12 +13,16 @@ import { QueryArticleDto } from './dto/query-article.dto';
 import { Public } from 'src/common/decorators/public.decorator';
 import { User } from 'src/common/decorators/user.decorator';
 import type { Users } from 'generated/prisma';
+import { SkipPermission } from 'src/common/decorators/skip-permission.decorator';
+import { ApiBearerAuth } from '@nestjs/swagger';
 
 @Controller('article')
 export class ArticleController {
   constructor(private readonly articleService: ArticleService) {}
 
   @Get()
+  @SkipPermission()
+  @ApiBearerAuth()
   async findAll(
     @Query()
     query: QueryArticleDto,

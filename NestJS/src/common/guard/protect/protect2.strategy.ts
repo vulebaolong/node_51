@@ -21,6 +21,9 @@ export class ProtectStrategy2 extends PassportStrategy(Strategy, 'protect') {
       where: {
         id: userId,
       },
+      omit: {
+        password: true,
+      },
     });
 
     if (!user) {

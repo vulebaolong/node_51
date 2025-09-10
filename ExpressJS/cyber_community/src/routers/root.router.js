@@ -12,7 +12,7 @@ import chatGroupRouter from "./chat-group.router";
 const rootRouter = express.Router();
 
 rootRouter.use("/docs", swaggerUi.serve);
-rootRouter.get("/docs", swaggerUi.setup(swaggerDocument));
+rootRouter.get("/docs", swaggerUi.setup(swaggerDocument, {swaggerOptions: {persistAuthorization: true}}));
 
 rootRouter.use("/demo", demoRouter);
 rootRouter.use("/article", articleRouter);
