@@ -8,16 +8,18 @@ import * as bcrypt from 'bcrypt';
 import { TokenService } from 'src/modules/modules-system/token/token.service';
 import { Users } from 'generated/prisma';
 import { RegisterDto } from './dto/register.dto';
+import { TotpService } from '../totp/totp.service';
 
 @Injectable()
 export class AuthService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly tokenService: TokenService,
+    private readonly tottpService: TotpService,
   ) {}
 
   async login(loginDto: LoginDto) {
-    const { email, password } = loginDto;
+    const { email, password, token } = loginDto;
 
     const userExits = await this.prisma.users.findUnique({
       where: {
@@ -28,6 +30,19 @@ export class AuthService {
       throw new BadRequestException(
         'Người dùng chưa tồn tại, vui lòng đăng ký',
       );
+    }
+
+    // nếu tài khoản của người dùng có bật 2FA thì mới xử lý
+    if (userExits.totpSecret) {
+      if (!token) {
+        // bước 1: không gửi token
+        // trả về isTotp là true để cho FE chuyển sang giao diện nhập token
+        return { isTotp: true };
+      } else {
+        // bước 2: phải gửi token
+        // có token rồi thì sẽ kiểm tra xem token hợp lệ hay không
+        this.tottpService.verify({ token: token }, userExits);
+      }
     }
 
     // Nếu code chạy được tới đây => đảm bảo có userExits

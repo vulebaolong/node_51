@@ -1,22 +1,22 @@
-// import { Global, Module } from "@nestjs/common";
-// import { ConfigModule as NestConfigModule } from "@nestjs/config";
-// import { envValidation } from "./env.validation";
-// import { ConfigService } from "./config.service";
+// import { Global, Module } from '@nestjs/common';
+// import { ConfigModule as NestConfigModule } from '@nestjs/config';
+// import { envValidation } from './env.validation';
+// import { ConfigService } from './config.service';
 
 // @Global()
 // @Module({
-//     imports: [
-//         NestConfigModule.forRoot({
-//             isGlobal: true,
-//             envFilePath: ".env",
-//             validationSchema: envValidation,
-//             validationOptions: {
-//                 convert: true,
-//             },
-//         }),
-//     ],
-//     providers: [ConfigService],
-//     exports: [ConfigService],
+//   imports: [
+//     NestConfigModule.forRoot({
+//       isGlobal: true,
+//       envFilePath: '.env',
+//       validationSchema: envValidation,
+//       validationOptions: {
+//         convert: true,
+//       },
+//     }),
+//   ],
+//   providers: [ConfigService],
+//   exports: [ConfigService],
 // })
 // export class ConfigModule {}
 
